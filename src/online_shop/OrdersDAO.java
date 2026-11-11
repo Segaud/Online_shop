@@ -7,41 +7,75 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class OrdersDAO {
+	
 	public void viewOrders(int customer_id) throws SQLException {
 		Connection conn = DatabaseConnection.getConnection();
-		
-		
-       String sql = """
-        		SELECT 
-        			o.id AS order_id,
-        			c.id AS customer_id,
-        			i.name AS item_name,
-        			oi.quantity
-        		FROM orders o
-        		JOIN customers c ON o.customer_id = c.id
-        		JOIN order_items oi ON oi.order_id = o.id
-        		JOIN items i ON oi.item_id = i.id
-        		WHERE c.id = ?
-        		""";
-        
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        
-        pstmt.setInt(1, customer_id);
-		
+
+		String sql = """
+			SELECT
+				o.id AS order_id,
+				c.id AS customer_id,
+				i.name AS item_name,
+				i.price,
+				oi.quantity
+			FROM orders o
+			JOIN customers c ON o.customer_id = c.id
+			JOIN order_items oi ON oi.order_id = o.id
+			JOIN items i ON oi.item_id = i.id
+			WHERE c.id = ?
+			ORDER BY o.id
+			""";
+
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, customer_id);
+
 		ResultSet rs = pstmt.executeQuery();
-        
-        boolean orders = false;
-        while (rs.next()) {
-        	orders = true;
-            	System.out.println("Customer ID:" + rs.getInt("customer_id") + " of Order ID: " +
-                               rs.getString("order_id"));
-            	System.out.println("has ordered: " + rs.getString("item_name") + " x" + rs.getInt("quantity"));
-            }
-        if (!orders) {
-            System.out.println("No Orders in database!");
-            return;
-        }
+
+		boolean ordersFound = false;
+		int currentOrderId = -1;
+		double orderTotal = 0;
+
+		while (rs.next()) {
+			ordersFound = true;
+
+			int orderId = rs.getInt("order_id");
+			String itemName = rs.getString("item_name");
+			int quantity = rs.getInt("quantity");
+			double price = rs.getDouble("price");
+
+			if (currentOrderId != orderId) {
+				if (currentOrderId != -1) {
+					System.out.printf(
+						"Order total: £%.2f%n%n",
+						orderTotal
+					);
+				}
+
+				currentOrderId = orderId;
+				orderTotal = 0;
+
+				System.out.println("Order ID: " + orderId);
+			}
+
+			double itemTotal = price * quantity;
+			orderTotal += itemTotal;
+
+			System.out.printf(
+				"%s x%d @ £%.2f = £%.2f%n",
+				itemName, quantity, price, itemTotal
+			);
+		}
+
+		if (!ordersFound) {
+			System.out.println("No orders found for this customer.");
+		} else {
+			System.out.printf("Order total: £%.2f%n", orderTotal);
+		}
+
+		rs.close();
+		pstmt.close();
 	}
+
 	public int addOrderId(int customer_id) throws SQLException {
 		Connection conn = DatabaseConnection.getConnection();
 		
