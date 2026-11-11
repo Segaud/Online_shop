@@ -5,6 +5,29 @@ import java.util.Scanner;
 
 public class App {
 
+
+	private static int readValidQuantity(Scanner scanner) {
+		while (true) {
+			System.out.println("How many would you like?: ");
+
+			if (!scanner.hasNextInt()) {
+				System.out.println("Invalid quantity. Please enter a whole number greater than zero.");
+				scanner.nextLine();
+				continue;
+			}
+
+			int quantity = scanner.nextInt();
+			scanner.nextLine();
+
+			if (quantity > 0) {
+				return quantity;
+			}
+
+			System.out.println("Quantity must be greater than zero.");
+		}
+	}
+
+
 	public static void main(String[] args) throws SQLException {
 		CustomerDAO cd = new CustomerDAO();
 		ItemDAO itemd = new ItemDAO();
@@ -175,7 +198,7 @@ public class App {
 		        	int item_id = scanner.nextInt();
 		        	
 		        	System.out.println("How many would you like?: ");
-		        	int quantity = scanner.nextInt();
+		        	int quantity = readValidQuantity(scanner);
 		        	scanner.nextLine();
 		        	
 		        	orderd.addOrder(order_id, item_id, quantity);
@@ -200,7 +223,7 @@ public class App {
 			        	item_id = scanner.nextInt();
 			        	
 			        	System.out.println("How many would you like?: ");
-			        	quantity = scanner.nextInt();
+			        	quantity = readValidQuantity(scanner);
 			        	scanner.nextLine();
 			        	
 			        	orderd.addOrder(order_id, item_id, quantity);
