@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class App {
 
 
-    private static int readValidQuantity(Scanner scanner) {
+    static int readValidQuantity(Scanner scanner) {
         while (true) {
             System.out.println("How many would you like?: ");
 
