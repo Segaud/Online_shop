@@ -28,6 +28,25 @@ public class App {
 	}
 
 
+	private static int readMenuChoice(Scanner scanner) {
+		while (true) {
+			System.out.print("Enter your choice: ");
+
+			if (scanner.hasNextInt()) {
+				int choice = scanner.nextInt();
+				scanner.nextLine();
+				return choice;
+			}
+
+			System.out.println(
+				"Invalid input. Please enter a number."
+			);
+			scanner.nextLine();
+		}
+	}
+
+
+
 	public static void main(String[] args) throws SQLException {
 		CustomerDAO cd = new CustomerDAO();
 		ItemDAO itemd = new ItemDAO();
@@ -44,8 +63,7 @@ public class App {
 	        System.out.println("3: Orders");
 	        System.out.println("0: Exit");
 	        
-	        int choice = scanner.nextInt();
-	        scanner.nextLine();
+	        int choice = readMenuChoice(scanner);
 	        
 	        switch(choice) {
 	        case 1:
@@ -116,8 +134,7 @@ public class App {
 		        System.out.println("3: Delete Item");
 		        System.out.println("4: Update Item");
 		        
-		        int choice2 = scanner.nextInt();
-		        scanner.nextLine();
+		        int choice2 = readMenuChoice(scanner);
 		        
 		        switch(choice2) {
 		        case 1:
@@ -179,8 +196,7 @@ public class App {
 		        System.out.println("3: Delete Order");
 		        System.out.println("4: Update Order");
 		        
-		        int choice3 = scanner.nextInt();
-		        scanner.nextLine();
+		        int choice3 = readMenuChoice(scanner);
 		        
 		        switch(choice3) {
 		        case 1:
