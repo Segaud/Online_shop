@@ -63,6 +63,11 @@ public class OrdersDAO {
 		
 	}
 	public void addOrder(int order_id, int item_id, int quantity) throws SQLException {
+		if (quantity <= 0) {
+			throw new IllegalArgumentException(
+				"Quantity must be greater than zero."
+			);
+		}
 		Connection conn = DatabaseConnection.getConnection();
 		
 		String sql = ("INSERT INTO order_items (order_id, item_id, quantity) VALUES (?, ?, ?)");
