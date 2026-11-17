@@ -63,40 +63,50 @@ Database operations require an accessible MySQL server and the appropriate datab
 
 ## Automated Testing
 
-The project includes automated checks for quantity validation.
+The project contains automated tests using JUnit 6.1.3,
+alongside the original standalone quantity-validation tests.
 
-The tests cover:
+The JUnit tests cover:
 
-1. Positive quantities are accepted.
-2. Zero quantities are rejected.
-3. Negative quantities are rejected.
-4. Non-numeric input is rejected.
+- Quantity validation and boundary values.
+- Invalid and extreme test data.
+- Integration between validation and order calculations.
+- Command-line application smoke testing.
+- Component-level load testing.
 
-The tests can run independently of a MySQL database.
+### Dependencies
 
-To compile the application and tests, run the following commands from the project root, adjusting the JDBC driver path as required:
+Download junit-platform-console-standalone-6.1.3.jar
+and place it in the lib/ folder.
 
-```bash
+The JAR is excluded from Git and must be installed locally.
+
+### Compile and Run Tests
+
+From the project root:
+
+```sh
 mkdir -p build/classes
 
 javac \
-  -cp "/path/to/mysql-connector-j.jar" \
+  -cp "lib/junit-platform-console-standalone-6.1.3.jar" \
   -d build/classes \
   src/online_shop/*.java \
-  tests/online_shop/QuantityValidationTest.java
+  tests/online_shop/*.java
+
+java -jar lib/junit-platform-console-standalone-6.1.3.jar execute \
+  --class-path build/classes \
+  --scan-class-path
 ```
 
-Run the tests:
+The original standalone tests can also be executed with:
 
-```bash
+```sh
 java -cp build/classes online_shop.QuantityValidationTest
 ```
 
-Successful execution produces the message:
-
-```text
-All 4 automated tests passed!
-```
+These tests do not require a running MySQL database.
+Full database integration testing has not yet been completed.
 
 ## Continuous Integration
 
@@ -106,7 +116,7 @@ The `online-shop-ci` pipeline:
 
 1. Retrieves the source code from GitHub.
 2. Compiles the Java application and test classes.
-3. Executes the automated quantity-validation tests.
+3. Executes the JUnit quantity-validation tests.
 4. Records the build result.
 
 The pipeline can use SCM polling to check for repository changes.

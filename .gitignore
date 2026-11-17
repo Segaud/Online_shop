@@ -1,0 +1,11 @@
+
+# Compiled Java files
+*.class
+bin/
+build/
+
+# Downloaded libraries
+lib/*.jar
+
+# macOS files
+.DS_Store

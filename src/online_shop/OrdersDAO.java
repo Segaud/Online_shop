@@ -7,6 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class OrdersDAO {
+
+
+	static double calculateItemTotal(double price, int quantity) {
+		return price * quantity;
+	}
+
 	
 	public void viewOrders(int customer_id) throws SQLException {
 		Connection conn = DatabaseConnection.getConnection();
@@ -57,7 +63,7 @@ public class OrdersDAO {
 				System.out.println("Order ID: " + orderId);
 			}
 
-			double itemTotal = price * quantity;
+			double itemTotal = calculateItemTotal(price, quantity);
 			orderTotal += itemTotal;
 
 			System.out.printf(
