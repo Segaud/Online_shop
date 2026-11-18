@@ -9,9 +9,18 @@ import java.sql.Statement;
 public class OrdersDAO {
 
 
+	
 	static double calculateItemTotal(double price, int quantity) {
+
+		if (quantity <= 0) {
+			throw new IllegalArgumentException(
+				"Quantity must be greater than zero."
+			);
+		}
+
 		return price * quantity;
 	}
+
 
 	
 	public void viewOrders(int customer_id) throws SQLException {
